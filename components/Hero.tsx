@@ -1,100 +1,160 @@
 'use client';
 
-import React from 'react';
-import { motion } from 'motion/react';
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'motion/react';
 import { ChevronRight, Star, ArrowDown } from 'lucide-react';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
+import { EASE_OUT, ImageReveal, usePrefersReducedMotion } from '@/components/Reveal';
+
+const headline = [
+  { words: ['Precision', 'Dental', 'Care'], className: '' },
+  { words: ['Meets', 'Comfort.'], className: 'text-mint-teal italic' },
+];
+
+const fadeIn = (delay: number) => ({
+  initial: { opacity: 0, y: 24, filter: 'blur(6px)' },
+  animate: { opacity: 1, y: 0, filter: 'blur(0px)', transitionEnd: { filter: 'none' } },
+  transition: { duration: 1, ease: EASE_OUT, delay },
+});
 
 export default function Hero() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const reduceMotion = usePrefersReducedMotion();
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end start'] });
+  const imageY = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : 90]);
+  const copyY = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : -50]);
+
   return (
-    <section className="relative min-h-[90vh] flex items-center pt-20 pb-32 overflow-hidden">
+    <section ref={sectionRef} className="relative min-h-[90vh] flex items-center pt-32 lg:pt-36 pb-32 overflow-hidden">
       {/* Visual Background */}
       <div className="absolute inset-0 z-0">
-        <video
+        <motion.video
           autoPlay
           muted
           loop
           playsInline
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.6, ease: 'easeOut' }}
           className="w-full h-full object-cover"
         >
           <source
             src="https://cdn.pixabay.com/video/2020/09/16/50011-456079979_large.mp4"
             type="video/mp4"
           />
-        </video>
+        </motion.video>
         <div className="absolute inset-0 bg-gradient-to-r from-white via-white/80 to-transparent lg:bg-gradient-to-r lg:from-white lg:via-white/80 lg:to-transparent bg-white/90" />
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="flex flex-col lg:flex-row items-center gap-12 text-center lg:text-left">
-          <div className="max-w-3xl flex-1 flex flex-col items-center lg:items-start text-center lg:text-left">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: 'easeOut' }}
-            >
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-mint-teal/10 border border-mint-teal/20 rounded-full mb-6 mx-auto lg:mx-0">
-                <Star className="text-mint-teal fill-mint-teal" size={14} />
-                <span className="text-clinical-blue text-xs font-bold uppercase tracking-widest">
-                  Trusted by 500+ Local Families
-                </span>
-              </div>
-
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-clinical-blue leading-[1.1] mb-6">
-                Precision Dental Care <br />
-                <span className="text-mint-teal italic">Meets Comfort.</span>
-              </h1>
-
-              <p className="text-xl md:text-2xl text-clinical-blue/70 font-sans max-w-xl mb-10 leading-relaxed mx-auto lg:mx-0">
-                Experience high-end multi-speciality dentistry where meticulous hygiene 
-                and a gentle touch redefine your smile.
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <Link
-                  href="#booking"
-                  className="liquid-fill group px-8 py-4 bg-clinical-blue text-white rounded-full font-sans font-bold text-lg flex items-center justify-center gap-2 transition-all shadow-xl shadow-clinical-blue/20"
-                >
-                  Book Your Consultation
-                  <ChevronRight className="group-hover:translate-x-1 transition-transform" />
-                </Link>
-                <Link
-                  href="https://maps.app.goo.gl/53FjtSB5NZE8PAus6"
-                  target="_blank"
-                  className="px-8 py-4 border-2 border-clinical-blue text-clinical-blue rounded-full font-sans font-bold text-lg flex items-center justify-center gap-2 hover:bg-clinical-blue/5 transition-all"
-                >
-                  Get Directions
-                </Link>
-              </div>
-            </motion.div>
-          </div>
-
-          <motion.div 
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, delay: 0.2 }}
-            className="flex-1 w-full max-w-2xl"
+          <motion.div
+            style={{ y: copyY }}
+            className="max-w-3xl flex-1 flex flex-col items-center lg:items-start text-center lg:text-left"
           >
-            <div className="relative group w-full lg:h-[600px]">
-              <div className="absolute -inset-4 bg-mint-teal/20 rounded-[3rem] blur-3xl group-hover:bg-mint-teal/30 transition-all duration-500" />
-              <div className="relative h-full rounded-[2.5rem] overflow-hidden border-8 border-white/50 shadow-2xl lg:skew-x-[-2deg]">
-                <img 
-                  src="https://lh3.googleusercontent.com/gps-cs-s/APNQkAHnPuOmTZbSdvXRuI1nLPSc5HFoZUVYc9Rg9X-ttJIGU3VVA87lyjacrHq00g8sCON99alJmFjnYuBUN5aPBeOFPTZPhRgdUA5ShqS6-n2xbLCkvOezBcEU2bB3S65M4bVAQRBV=w1280-h720-k-no" 
-                  alt="Dr. Joffin's Clinic" 
-                  className="w-full h-full object-cover scale-110 group-hover:scale-100 transition-transform duration-1000"
-                />
-              </div>
-            </div>
+            <motion.div
+              {...fadeIn(0.1)}
+              className="inline-flex items-center gap-2 px-3 py-1 bg-mint-teal/10 border border-mint-teal/20 rounded-full mb-6 mx-auto lg:mx-0"
+            >
+              <Star className="text-mint-teal fill-mint-teal" size={14} />
+              <span className="text-clinical-blue text-xs font-bold uppercase tracking-widest">
+                Trusted by 500+ Local Families
+              </span>
+            </motion.div>
+
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-clinical-blue leading-[1.1] mb-6">
+              {headline.map((line, lineIndex) => {
+                const offset = headline.slice(0, lineIndex).reduce((n, l) => n + l.words.length, 0);
+                return (
+                  <span key={lineIndex} className={cn('block', line.className)}>
+                    {line.words.map((word, wordIndex) => (
+                      <React.Fragment key={word}>
+                        {/* Mask: each word rises out of its own clipped box */}
+                        <span className="inline-block overflow-hidden align-bottom pb-[0.14em] -mb-[0.14em] px-[0.06em] -mx-[0.06em]">
+                          <motion.span
+                            className="inline-block"
+                            initial={{ y: '115%' }}
+                            animate={{ y: '0%' }}
+                            transition={{ duration: 1.1, ease: EASE_OUT, delay: 0.25 + (offset + wordIndex) * 0.09 }}
+                          >
+                            {word}
+                          </motion.span>
+                        </span>
+                        {wordIndex < line.words.length - 1 && ' '}
+                      </React.Fragment>
+                    ))}
+                  </span>
+                );
+              })}
+            </h1>
+
+            <motion.p
+              {...fadeIn(0.75)}
+              className="text-xl md:text-2xl text-clinical-blue/70 font-sans max-w-xl mb-10 leading-relaxed mx-auto lg:mx-0"
+            >
+              Experience high-end multi-speciality dentistry where meticulous hygiene
+              and a gentle touch redefine your smile.
+            </motion.p>
+
+            <motion.div {...fadeIn(0.9)} className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+              <Link
+                href="#booking"
+                className="liquid-fill group px-8 py-4 bg-clinical-blue text-white rounded-full font-sans font-bold text-lg flex items-center justify-center gap-2 transition-all duration-500 ease-smooth hover:-translate-y-0.5 shadow-xl shadow-clinical-blue/20"
+              >
+                Book Your Consultation
+                <ChevronRight className="group-hover:translate-x-1 transition-transform duration-500 ease-smooth" />
+              </Link>
+              <Link
+                href="https://maps.app.goo.gl/53FjtSB5NZE8PAus6"
+                target="_blank"
+                className="px-8 py-4 border-2 border-clinical-blue text-clinical-blue rounded-full font-sans font-bold text-lg flex items-center justify-center gap-2 hover:bg-clinical-blue/5 hover:-translate-y-0.5 transition-all duration-500 ease-smooth"
+              >
+                Get Directions
+              </Link>
+            </motion.div>
+          </motion.div>
+
+          <motion.div style={{ y: imageY }} className="flex-1 w-full max-w-2xl">
+            <motion.div
+              initial={{ y: 60 }}
+              animate={{ y: 0 }}
+              transition={{ duration: 1.6, ease: EASE_OUT, delay: 0.35 }}
+              className="relative group w-full lg:h-[600px]"
+            >
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1.6, delay: 1.2 }}
+                className="absolute -inset-4 bg-mint-teal/20 rounded-[3rem] blur-3xl group-hover:bg-mint-teal/30 transition-colors duration-700"
+              />
+              {/* The framed photo rises out of its own bottom edge */}
+              <ImageReveal
+                onLoad
+                from="bottom"
+                delay={0.35}
+                radius={40}
+                src="/images/hero-dentist-patient.webp"
+                alt="Dr. Joffin examining a smiling patient in the dental chair"
+                wrapperClassName="h-full lg:skew-x-[-2deg]"
+                shadowClassName="rounded-[2.5rem] shadow-2xl shadow-clinical-blue/20"
+                className="h-full rounded-[2.5rem] border-8 border-white/50"
+                imgClassName="w-full aspect-[4/5] lg:aspect-auto lg:h-full object-cover object-[center_35%] group-hover:scale-105 transition-[scale] duration-1000 ease-smooth"
+              />
+            </motion.div>
           </motion.div>
         </div>
       </div>
 
-      <motion.div 
-        animate={{ y: [0, 10, 0] }}
-        transition={{ duration: 2, repeat: Infinity }}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 1.6 }}
         className="absolute bottom-10 left-1/2 -translate-x-1/2 text-clinical-blue/30"
       >
-        <ArrowDown />
+        <motion.div animate={{ y: [0, 10, 0] }} transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}>
+          <ArrowDown />
+        </motion.div>
       </motion.div>
     </section>
   );

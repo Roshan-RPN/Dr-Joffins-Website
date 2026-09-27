@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { Inter, Playfair_Display } from 'next/font/google';
+import 'lenis/dist/lenis.css';
 import './globals.css';
+import MotionProvider from '@/components/MotionProvider';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -27,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
       <body suppressHydrationWarning className="font-sans antialiased text-[#0A2540] bg-white">
-        {children}
+        <MotionProvider>{children}</MotionProvider>
       </body>
     </html>
   );

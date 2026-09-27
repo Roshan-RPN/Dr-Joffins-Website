@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'motion/react';
+import { Reveal, Stagger, StaggerItem, zoomIn } from '@/components/Reveal';
 import { Ruler, Activity, Sparkles, Scissors, Info } from 'lucide-react';
 
 const specialties = [
@@ -35,36 +35,34 @@ export default function Services() {
   return (
     <section id="specialities" className="py-32 bg-clinical-blue/5 overflow-hidden">
       <div className="container mx-auto px-6">
-        <div className="text-center max-w-2xl mx-auto mb-20">
-          <motion.span
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            className="text-mint-teal font-bold uppercase tracking-[0.3em] text-xs mb-4 block"
-          >
-            Specialized Care
-          </motion.span>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-6xl font-serif text-clinical-blue mb-6 leading-tight"
-          >
-            Crafting Smiles with <br /><span className="italic">Clinical Perfection.</span>
-          </motion.h2>
-        </div>
+        <Stagger className="text-center max-w-2xl mx-auto mb-20">
+          <StaggerItem variants={zoomIn}>
+            <span className="text-mint-teal font-bold uppercase tracking-[0.3em] text-xs mb-4 block">
+              Specialized Care
+            </span>
+          </StaggerItem>
+          <StaggerItem variants={zoomIn}>
+            <h2 className="text-4xl md:text-6xl font-serif text-clinical-blue mb-6 leading-tight">
+              Crafting Smiles with <br /><span className="italic">Clinical Perfection.</span>
+            </h2>
+          </StaggerItem>
+        </Stagger>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {specialties.map((service, index) => {
             const Icon = service.icon;
             return (
-              <motion.div
+              <Reveal
                 key={service.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
+                x={index % 2 === 0 ? -80 : 80}
+                y={32}
+                rotate={index % 2 === 0 ? -4 : 4}
+                duration={1.1}
+                delay={(index % 4) * 0.12}
+                amount={0.3}
                 className="group relative h-[400px]"
               >
-                <div className="glass h-full p-10 rounded-[2.5rem] flex flex-col justify-between transition-all duration-500 group-hover:bg-clinical-blue group-hover:border-clinical-blue group-hover:-translate-y-4 text-center sm:text-left items-center sm:items-start">
+                <div className="glass h-full p-10 rounded-[2.5rem] flex flex-col justify-between transition-all duration-700 ease-smooth group-hover:bg-clinical-blue group-hover:border-clinical-blue group-hover:-translate-y-4 text-center sm:text-left items-center sm:items-start">
                   <div>
                     <div className="w-16 h-16 rounded-2xl bg-clinical-blue/10 flex items-center justify-center mb-8 group-hover:bg-white/10 group-hover:text-white transition-colors">
                       <Icon className="w-8 h-8 transition-colors group-hover:text-white" />
@@ -78,18 +76,18 @@ export default function Services() {
                   </div>
                   
                   <div className="relative overflow-hidden h-10 w-full flex justify-center sm:justify-start">
-                    <div className="flex items-center gap-2 text-clinical-blue/40 font-bold text-xs uppercase tracking-widest group-hover:text-white/50 transition-all transform group-hover:translate-y-[-40px]">
+                    <div className="flex items-center gap-2 text-clinical-blue/40 font-bold text-xs uppercase tracking-widest group-hover:text-white/50 transition-all duration-500 ease-smooth transform group-hover:translate-y-[-40px]">
                       <Info size={14} />
                       Hover for Details
                     </div>
-                    <div className="absolute top-10 flex items-center gap-2 text-mint-teal font-bold text-xs uppercase tracking-widest transition-all transform group-hover:translate-y-[-40px]">
+                    <div className="absolute top-10 flex items-center gap-2 text-mint-teal font-bold text-xs uppercase tracking-widest transition-all duration-500 ease-smooth transform group-hover:translate-y-[-40px]">
                       Learn More
                     </div>
                   </div>
                 </div>
 
                 {/* Expansion/Detail on Hover (Simulated via overlay for clean design) */}
-                <div className="absolute inset-0 p-10 bg-clinical-blue rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-center pointer-events-none text-center sm:text-left items-center sm:items-start">
+                <div className="absolute inset-0 p-10 bg-clinical-blue rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-smooth flex flex-col justify-center pointer-events-none text-center sm:text-left items-center sm:items-start">
                   <h3 className="text-2xl font-serif text-white mb-6">
                     {service.title}
                   </h3>
@@ -98,7 +96,7 @@ export default function Services() {
                   </p>
                   <div className="w-10 h-1 bg-mint-teal" />
                 </div>
-              </motion.div>
+              </Reveal>
             );
           })}
         </div>

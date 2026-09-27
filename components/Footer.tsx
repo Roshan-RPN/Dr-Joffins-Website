@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { motion } from 'motion/react';
+import { Reveal, Stagger, StaggerItem, EASE_IN_OUT } from '@/components/Reveal';
 import { MapPin, Phone, Mail, Instagram, Facebook, Linkedin } from 'lucide-react';
 import Link from 'next/link';
 
@@ -12,8 +13,8 @@ export default function Footer() {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[150%] h-[500px] bg-mint-teal/5 rounded-[100%] blur-3xl -translate-y-1/2" />
 
       <div className="container mx-auto px-6 relative z-10">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-20 mb-32 text-center md:text-left">
-          <div className="flex flex-col items-center md:items-start">
+        <Stagger stagger={0.12} amount={0.1} className="grid md:grid-cols-2 lg:grid-cols-4 gap-20 mb-32 text-center md:text-left">
+          <StaggerItem className="flex flex-col items-center md:items-start">
             <Link href="/" className="flex items-center gap-3 mb-10">
               <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center">
                 <span className="text-clinical-blue font-serif font-bold text-2xl">J</span>
@@ -32,14 +33,14 @@ export default function Footer() {
             </p>
             <div className="flex gap-4">
               {[Instagram, Facebook, Linkedin].map((Icon, i) => (
-                <a key={i} href="#" className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center hover:bg-mint-teal transition-colors">
+                <a key={i} href="#" className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center hover:bg-mint-teal hover:-translate-y-1 transition-all duration-500 ease-smooth">
                   <Icon size={20} />
                 </a>
               ))}
             </div>
-          </div>
+          </StaggerItem>
 
-          <div>
+          <StaggerItem>
             <h4 className="text-mint-teal font-bold uppercase tracking-widest text-xs mb-10">Navigation</h4>
             <ul className="flex flex-col gap-6 text-xl font-serif">
               <li><Link href="#clinic" className="hover:text-mint-teal transition-colors">The Clinic</Link></li>
@@ -47,9 +48,9 @@ export default function Footer() {
               <li><Link href="#diaries" className="hover:text-mint-teal transition-colors">Patient Stories</Link></li>
               <li><Link href="#doctor" className="hover:text-mint-teal transition-colors">About Doctor</Link></li>
             </ul>
-          </div>
+          </StaggerItem>
 
-          <div>
+          <StaggerItem>
             <h4 className="text-mint-teal font-bold uppercase tracking-widest text-xs mb-10">Opening Hours</h4>
             <ul className="flex flex-col gap-3 text-sm font-sans text-white/70">
               <li className="flex justify-between border-b border-white/5 pb-2"><span>Monday</span> <span>9:30 AM – 8:00 PM</span></li>
@@ -60,9 +61,9 @@ export default function Footer() {
               <li className="flex justify-between border-b border-white/5 pb-2"><span>Saturday</span> <span>9:30 AM – 8:00 PM</span></li>
               <li className="flex justify-between"><span>Sunday</span> <span>9:30 AM – 1:00 PM</span></li>
             </ul>
-          </div>
+          </StaggerItem>
 
-          <div className="flex flex-col items-center md:items-start text-center md:text-left">
+          <StaggerItem className="flex flex-col items-center md:items-start text-center md:text-left">
             <h4 className="text-mint-teal font-bold uppercase tracking-widest text-xs mb-10">Contact</h4>
             <ul className="flex flex-col gap-8">
               <li className="flex gap-4 group justify-center md:justify-start">
@@ -87,10 +88,18 @@ export default function Footer() {
                 <span className="text-white/70 font-sans">hello@drjoffin.com</span>
               </li>
             </ul>
-          </div>
-        </div>
+          </StaggerItem>
+        </Stagger>
 
-        <div className="pt-16 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8 text-center md:text-left">
+        <motion.div
+          aria-hidden
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true, amount: 1 }}
+          transition={{ duration: 1.6, ease: EASE_IN_OUT }}
+          className="h-px bg-gradient-to-r from-transparent via-mint-teal/40 to-transparent origin-left"
+        />
+        <Reveal y={16} delay={0.4} amount={0.5} className="pt-16 flex flex-col md:flex-row justify-between items-center gap-8 text-center md:text-left">
           <div className="flex flex-col items-center md:items-start">
             <p className="text-white/30 text-sm font-sans italic">
               © 2026 Dr. JOFFIN&apos;S MULTI-SPECIALITY DENTAL CLINIC.
@@ -100,7 +109,7 @@ export default function Footer() {
             <a href="#" className="hover:text-mint-teal transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-mint-teal transition-colors">Terms of Service</a>
           </div>
-        </div>
+        </Reveal>
       </div>
     </footer>
   );

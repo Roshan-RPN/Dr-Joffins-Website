@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Stagger, StaggerItem, EASE_OUT, fadeUp, slideFromLeft } from '@/components/Reveal';
 import { Calendar, Clock, User, Phone, CheckCircle2, MessageCircle } from 'lucide-react';
 
 export default function BookingPortal() {
@@ -18,55 +19,33 @@ export default function BookingPortal() {
     setSubmitted(true);
   };
 
-  if (submitted) {
-    return (
-      <section id="booking" className="py-32 bg-white relative">
-        <div className="container mx-auto px-6 max-w-2xl text-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="glass p-16 rounded-[3rem] border-mint-teal/20"
-          >
-            <div className="w-24 h-24 bg-mint-teal/10 rounded-full flex items-center justify-center mx-auto mb-10">
-              <CheckCircle2 className="text-mint-teal" size={48} />
-            </div>
-            <h2 className="text-4xl font-serif text-clinical-blue mb-6">Appointment Requested!</h2>
-            <p className="text-clinical-blue/60 text-lg mb-10">
-              Thank you, {formData.name}. Dr. Joffin&apos;s coordinator will call you within 15 minutes to confirm your slot.
-            </p>
-            <button 
-              onClick={() => setSubmitted(false)}
-              className="text-mint-teal font-sans font-bold border-b-2 border-mint-teal hover:text-clinical-blue hover:border-clinical-blue transition-all"
-            >
-              Book another appointment
-            </button>
-          </motion.div>
-        </div>
-      </section>
-    );
-  }
-
   return (
     <section id="booking" className="py-32 bg-clinical-blue/5 overflow-hidden">
       <div className="container mx-auto px-6">
         <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-20 items-center lg:items-start text-center lg:text-left">
-          <div className="lg:w-1/2 flex flex-col items-center lg:items-start">
-            <span className="text-mint-teal font-bold uppercase tracking-[0.3em] text-xs mb-4 block">
-              Booking Portal
-            </span>
-            <h2 className="text-4xl md:text-6xl font-serif text-clinical-blue mb-8 leading-tight">
-              Start Your Journey to <br /><span className="italic">Clinical Excellence.</span>
-            </h2>
-            <p className="text-xl text-clinical-blue/60 mb-12 max-w-lg leading-relaxed">
-              Fill out the form below or reach out directly on WhatsApp for an immediate consultation.
-            </p>
+          <Stagger stagger={0.12} className="lg:w-1/2 flex flex-col items-center lg:items-start">
+            <StaggerItem variants={slideFromLeft}>
+              <span className="text-mint-teal font-bold uppercase tracking-[0.3em] text-xs mb-4 block">
+                Booking Portal
+              </span>
+            </StaggerItem>
+            <StaggerItem variants={slideFromLeft}>
+              <h2 className="text-4xl md:text-6xl font-serif text-clinical-blue mb-8 leading-tight">
+                Start Your Journey to <br /><span className="italic">Clinical Excellence.</span>
+              </h2>
+            </StaggerItem>
+            <StaggerItem variants={slideFromLeft}>
+              <p className="text-xl text-clinical-blue/60 mb-12 max-w-lg leading-relaxed">
+                Fill out the form below or reach out directly on WhatsApp for an immediate consultation.
+              </p>
+            </StaggerItem>
 
-            <div className="flex flex-col gap-6 w-full max-w-md lg:max-w-none">
+            <StaggerItem variants={slideFromLeft} className="flex flex-col gap-6 w-full max-w-md lg:max-w-none">
               <a 
                 href="https://wa.me/919496857648"
-                className="flex items-center gap-6 p-6 glass rounded-[2rem] border-white/50 hover:bg-white/10 transition-all group"
+                className="flex items-center gap-6 p-6 glass rounded-[2rem] border-white/50 hover:bg-white/60 hover:-translate-y-1 transition-all duration-500 ease-smooth group"
               >
-                <div className="w-14 h-14 bg-mint-teal/10 rounded-2xl flex items-center justify-center text-mint-teal group-hover:bg-[#25D366] group-hover:text-white transition-all">
+                <div className="w-14 h-14 bg-mint-teal/10 rounded-2xl flex items-center justify-center text-mint-teal group-hover:bg-[#25D366] group-hover:text-white transition-all duration-500 ease-smooth">
                   <MessageCircle size={24} />
                 </div>
                 <div className="text-left font-sans">
@@ -84,52 +63,92 @@ export default function BookingPortal() {
                   <p className="text-clinical-blue/50 text-sm">09496857648</p>
                 </div>
               </div>
-            </div>
-          </div>
+            </StaggerItem>
+          </Stagger>
 
           <div className="lg:w-1/2 w-full max-w-2xl">
             <motion.div
-              initial={{ opacity: 0, x: 50 }}
+              initial={{ opacity: 0, x: 80 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 1.1, ease: EASE_OUT }}
               className="bg-white p-8 md:p-12 rounded-[3.5rem] shadow-2xl relative"
             >
-              <form onSubmit={handleSubmit} className="space-y-8">
-                <div className="relative group text-left">
+              <AnimatePresence mode="wait" initial={false}>
+              {submitted ? (
+                <motion.div
+                  key="success"
+                  initial={{ opacity: 0, scale: 0.96, filter: 'blur(6px)' }}
+                  animate={{ opacity: 1, scale: 1, filter: 'blur(0px)', transitionEnd: { filter: 'none' } }}
+                  exit={{ opacity: 0, scale: 0.96 }}
+                  transition={{ duration: 0.6, ease: EASE_OUT }}
+                  className="text-center py-8"
+                >
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: 'spring', stiffness: 200, damping: 14, delay: 0.2 }}
+                    className="w-24 h-24 bg-mint-teal/10 rounded-full flex items-center justify-center mx-auto mb-10"
+                  >
+                    <CheckCircle2 className="text-mint-teal" size={48} />
+                  </motion.div>
+                  <h2 className="text-4xl font-serif text-clinical-blue mb-6">Appointment Requested!</h2>
+                  <p className="text-clinical-blue/60 text-lg mb-10">
+                    Thank you, {formData.name}. Dr. Joffin&apos;s coordinator will call you within 15 minutes to confirm your slot.
+                  </p>
+                  <button
+                    onClick={() => setSubmitted(false)}
+                    className="text-mint-teal font-sans font-bold border-b-2 border-mint-teal hover:text-clinical-blue hover:border-clinical-blue transition-all duration-500 ease-smooth"
+                  >
+                    Book another appointment
+                  </button>
+                </motion.div>
+              ) : (
+              <motion.form
+                key="form"
+                onSubmit={handleSubmit}
+                className="space-y-8"
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, amount: 0.2 }}
+                exit={{ opacity: 0, scale: 0.96, transition: { duration: 0.35, ease: EASE_OUT } }}
+                variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08, delayChildren: 0.3 } } }}
+              >
+                <motion.div variants={fadeUp} className="relative group text-left">
                   <label className="text-xs font-bold uppercase tracking-widest text-clinical-blue/50 mb-3 block">Full Name</label>
-                  <div className="flex items-center gap-4 p-4 bg-clinical-blue/5 rounded-2xl border border-transparent group-focus-within:border-mint-teal group-focus-within:bg-white transition-all">
+                  <div className="flex items-center gap-4 p-4 bg-clinical-blue/5 rounded-2xl border border-transparent group-focus-within:border-mint-teal group-focus-within:bg-white transition-all duration-500 ease-smooth">
                     <User className="text-clinical-blue/30" size={20} />
-                    <input 
+                    <input
                       required
-                      type="text" 
-                      placeholder="Jane Doe" 
+                      type="text"
+                      placeholder="Jane Doe"
                       className="bg-transparent border-none outline-none w-full text-clinical-blue font-sans"
                       value={formData.name}
                       onChange={(e) => setFormData({...formData, name: e.target.value})}
                     />
                   </div>
-                </div>
+                </motion.div>
 
-                <div className="relative group text-left">
+                <motion.div variants={fadeUp} className="relative group text-left">
                   <label className="text-xs font-bold uppercase tracking-widest text-clinical-blue/50 mb-3 block">Contact Number</label>
-                  <div className="flex items-center gap-4 p-4 bg-clinical-blue/5 rounded-2xl border border-transparent group-focus-within:border-mint-teal group-focus-within:bg-white transition-all">
+                  <div className="flex items-center gap-4 p-4 bg-clinical-blue/5 rounded-2xl border border-transparent group-focus-within:border-mint-teal group-focus-within:bg-white transition-all duration-500 ease-smooth">
                     <Phone className="text-clinical-blue/30" size={20} />
-                    <input 
+                    <input
                       required
-                      type="tel" 
-                      placeholder="09496857648" 
+                      type="tel"
+                      placeholder="09496857648"
                       className="bg-transparent border-none outline-none w-full text-clinical-blue font-sans"
                       value={formData.phone}
                       onChange={(e) => setFormData({...formData, phone: e.target.value})}
                     />
                   </div>
-                </div>
+                </motion.div>
 
-                <div className="grid md:grid-cols-2 gap-8 text-left">
+                <motion.div variants={fadeUp} className="grid md:grid-cols-2 gap-8 text-left">
                   <div className="relative group">
                     <label className="text-xs font-bold uppercase tracking-widest text-clinical-blue/50 mb-3 block">Service</label>
-                    <div className="flex items-center gap-4 p-4 bg-clinical-blue/5 rounded-2xl border border-transparent focus-within:border-mint-teal focus-within:bg-white transition-all">
-                      <select 
+                    <div className="flex items-center gap-4 p-4 bg-clinical-blue/5 rounded-2xl border border-transparent focus-within:border-mint-teal focus-within:bg-white transition-all duration-500 ease-smooth">
+                      <select
                         className="bg-transparent border-none outline-none w-full text-clinical-blue font-sans appearance-none"
                         value={formData.service}
                         onChange={(e) => setFormData({...formData, service: e.target.value})}
@@ -143,26 +162,30 @@ export default function BookingPortal() {
                   </div>
                   <div className="relative group">
                     <label className="text-xs font-bold uppercase tracking-widest text-clinical-blue/50 mb-3 block">Date</label>
-                    <div className="flex items-center gap-4 p-4 bg-clinical-blue/5 rounded-2xl border border-transparent focus-within:border-mint-teal focus-within:bg-white transition-all">
+                    <div className="flex items-center gap-4 p-4 bg-clinical-blue/5 rounded-2xl border border-transparent focus-within:border-mint-teal focus-within:bg-white transition-all duration-500 ease-smooth">
                       <Calendar className="text-clinical-blue/30" size={20} />
-                      <input 
+                      <input
                         required
-                        type="date" 
+                        type="date"
                         className="bg-transparent border-none outline-none w-full text-clinical-blue font-sans"
                         value={formData.date}
                         onChange={(e) => setFormData({...formData, date: e.target.value})}
                       />
                     </div>
                   </div>
-                </div>
+                </motion.div>
 
-                <button 
+                <motion.button
+                  variants={fadeUp}
                   type="submit"
-                  className="liquid-fill w-full py-6 bg-clinical-blue text-white rounded-3xl font-sans font-bold text-xl transition-all shadow-xl shadow-clinical-blue/20"
+                  whileTap={{ scale: 0.98 }}
+                  className="liquid-fill w-full py-6 bg-clinical-blue text-white rounded-3xl font-sans font-bold text-xl transition-[color,box-shadow] duration-500 ease-smooth shadow-xl shadow-clinical-blue/20 hover:shadow-2xl hover:shadow-mint-teal/30"
                 >
                   Schedule Visit
-                </button>
-              </form>
+                </motion.button>
+              </motion.form>
+              )}
+              </AnimatePresence>
             </motion.div>
           </div>
         </div>
